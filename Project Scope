@@ -1,0 +1,77 @@
+1. View hotels
+2. Filter hotels by city
+3. View rooms for a hotel
+4. Create booking
+5. View user bookings
+6. Admin adds hotels and rooms
+
+Entities
+1. User
+2. Hotel
+3. Room
+4. Booking
+5. Admin
+
+Relationships
+1. One hotel has many rooms
+2. One room belongs to one hotel
+3. One user can have many bookings
+4. One booking belongs to one user
+5. One room can have many bookings
+6. One booking belongs to one room
+
+User
+- id
+- name
+- email
+- password
+
+Hotel
+- id
+- name
+- city
+- address
+- rating
+
+Room
+- id
+- hotel_id
+- room_number
+- price_per_night
+- capacity
+
+Booking
+- id
+- user_id
+- room_id
+- check_in
+- check_out
+- status
+
+User
+- id → integer
+- name → varchar(100)
+- email → varchar(100)
+- password → varchar(255)
+
+Hotel
+- id → integer
+- name → varchar(100)
+- city → varchar(100)
+- address → varchar(200)
+- rating → numeric(2,1)
+
+Room
+- id → integer
+- hotel_id → integer
+- room_number → integer
+- price_per_night → numeric(10,2)
+- capacity → integer
+
+Booking
+- id → integer
+- user_id → integer
+- room_id → integer
+- check_in → date
+- check_out → date
+- status → varchar(50)

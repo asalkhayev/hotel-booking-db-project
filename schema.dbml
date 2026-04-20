@@ -1,0 +1,36 @@
+Table users {
+  id integer [pk, increment]
+  name varchar(100)
+  email varchar(100) [unique]
+  password varchar(255)
+  created_at timestamp
+}
+
+Table hotels {
+  id integer [pk, increment]
+  name varchar(100)
+  city varchar(100)
+  address varchar(200)
+  rating numeric(2,1)
+}
+
+Table rooms {
+  id integer [pk, increment]
+  hotel_id integer
+  room_number integer
+  price_per_night numeric(10,2)
+  capacity integer
+}
+
+Table bookings {
+  id integer [pk, increment]
+  user_id integer
+  room_id integer
+  check_in date
+  check_out date
+  status varchar(50)
+}
+
+Ref: rooms.hotel_id > hotels.id
+Ref: bookings.user_id > users.id
+Ref: bookings.room_id > rooms.id
