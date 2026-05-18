@@ -1,0 +1,84 @@
+Table cities {
+  id integer [primary key]
+  name varchar(100) [not null]
+  country varchar(100) [not null]
+}
+
+Table hotels {
+  id integer [primary key]
+  city_id integer [not null]
+  name varchar(150) [not null]
+  address varchar(255) [not null]
+  stars integer [not null]
+  description text
+}
+
+Table room_types {
+  id integer [primary key]
+  name varchar(100) [not null]
+  capacity integer [not null]
+  description text
+}
+
+Table rooms {
+  id integer [primary key]
+  hotel_id integer [not null]
+  room_type_id integer [not null]
+  room_number varchar(20) [not null]
+  price_per_night numeric(10,2) [not null]
+  is_available boolean [default: true]
+
+  indexes {
+    (hotel_id, room_number) [unique]
+  }
+}
+
+Table users {
+  id integer [primary key]
+  full_name varchar(150) [not null]
+  email varchar(150) [not null, unique]
+  phone varchar(30)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table bookings {
+  id integer [primary key]
+  user_id integer [not null]
+  room_id integer [not null]
+  check_in date [not null]
+  check_out date [not null]
+  status varchar(30) [not null, default: 'confirmed']
+  total_price numeric(10,2) [not null]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table payments {
+  id integer [primary key]
+  booking_id integer [not null, unique]
+  amount numeric(10,2) [not null]
+  payment_method varchar(50) [not null]
+  status varchar(30) [not null, default: 'paid']
+  paid_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table reviews {
+  id integer [primary key]
+  user_id integer [not null]
+  hotel_id integer [not null]
+  rating integer [not null]
+  comment text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Ref: hotels.city_id > cities.id
+
+Ref: rooms.hotel_id > hotels.id
+Ref: rooms.room_type_id > room_types.id
+
+Ref: bookings.user_id > users.id
+Ref: bookings.room_id > rooms.id
+
+Ref: payments.booking_id > bookings.id
+
+Ref: reviews.user_id > users.id
+Ref: reviews.hotel_id > hotels.id
