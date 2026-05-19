@@ -1072,4 +1072,114 @@ td {
   .overview-strip div:last-child {
     border-bottom: none;
   }
+
+  /* Login modal */
+
+  .user-chip {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(14, 75, 79, 0.22);
+    background: #eef7f4;
+    color: #0e4b4f;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(0, 0, 0, 0.56);
+    backdrop-filter: blur(8px);
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+
+  .login-modal {
+    width: min(460px, 100%);
+    position: relative;
+    background: #fffdf8;
+    border-radius: 28px;
+    padding: 34px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 999px;
+    background: #f1eadf;
+    color: #171717;
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .modal-kicker {
+    color: #b77f37 !important;
+  }
+
+  .login-modal h2 {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 34px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  .login-modal p {
+    margin: 12px 0 24px;
+    color: #736f66;
+    line-height: 1.6;
+  }
+
+  .login-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .login-modal label {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    color: #3c3934;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .login-modal input {
+    width: 100%;
+    border: 1px solid #d9d0c1;
+    border-radius: 14px;
+    background: #fffaf2;
+    padding: 13px 14px;
+    outline: none;
+  }
+
+  .login-modal input:focus {
+    border-color: #0e4b4f;
+    box-shadow: 0 0 0 4px rgba(14, 75, 79, 0.11);
+  }
+
+  .logged-user-note {
+    margin: 8px 0 22px;
+    background: #edf8f3;
+    color: #0d6b44;
+    border-radius: 16px;
+    padding: 13px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+  
+  .logged-user-note.warning {
+    background: #fff3df;
+    color: #8a4b00;
+  }
 }

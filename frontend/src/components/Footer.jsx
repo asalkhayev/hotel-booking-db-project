@@ -4,10 +4,10 @@ function Footer() {
   return (
     <footer className="site-footer">
       <div className="footer-brand">
-        <h3>STAYNEST</h3>
+        <h3>ARANGATRIP</h3>
         <p>
-          A semester database project with a polished booking interface,
-          FastAPI backend, and PostgreSQL relational schema.
+          ArangaTrip is a full-stack hotel booking platform built as a database
+          course project with React, FastAPI, and PostgreSQL.
         </p>
       </div>
 

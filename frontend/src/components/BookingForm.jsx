@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createBooking } from "../api";
 
 function BookingForm({
-  users,
   selectedRoom,
   checkIn,
   setCheckIn,
@@ -11,8 +10,16 @@ function BookingForm({
   nights,
   onBookingCreated,
 }) {
-  const [selectedUserId, setSelectedUserId] = useState("");
+  const [currentUser, setCurrentUser] = useState(null);
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem("currentUser");
+
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const roomPrice = selectedRoom ? Number(selectedRoom.price_per_night) : 0;
   const subtotal = roomPrice * nights;
@@ -23,18 +30,21 @@ function BookingForm({
   async function handleSubmit(e) {
     e.preventDefault();
 
+    const savedUser = localStorage.getItem("currentUser");
+    const loggedInUser = savedUser ? JSON.parse(savedUser) : null;
+
+    if (!loggedInUser) {
+      setMessage("Please login before booking.");
+      return;
+    }
+
     if (!selectedRoom) {
       setMessage("Please choose a room first.");
       return;
     }
 
-    if (!selectedUserId) {
-      setMessage("Please choose a guest.");
-      return;
-    }
-
     await createBooking({
-      user_id: Number(selectedUserId),
+      user_id: Number(loggedInUser.id),
       room_id: Number(selectedRoom.id),
       check_in: checkIn,
       check_out: checkOut,
@@ -42,8 +52,8 @@ function BookingForm({
       total_price: Number(total.toFixed(2)),
     });
 
+    setCurrentUser(loggedInUser);
     setMessage("Booking confirmed and saved in PostgreSQL.");
-    setSelectedUserId("");
 
     if (onBookingCreated) {
       onBookingCreated();
@@ -53,25 +63,18 @@ function BookingForm({
   return (
     <aside className="reservation-card">
       <h3>Reserve your stay</h3>
-      <p>Choose a guest and confirm the booking.</p>
+
+      {currentUser ? (
+        <p className="logged-user-note">
+          Logged in as <strong>{currentUser.full_name}</strong>
+        </p>
+      ) : (
+        <p className="logged-user-note warning">
+          Please login from the header before booking.
+        </p>
+      )}
 
       <form onSubmit={handleSubmit}>
-        <label>
-          Guest
-          <select
-            value={selectedUserId}
-            onChange={(e) => setSelectedUserId(e.target.value)}
-            required
-          >
-            <option value="">Select guest</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.full_name}
-              </option>
-            ))}
-          </select>
-        </label>
-
         <div className="form-row">
           <label>
             Check-in

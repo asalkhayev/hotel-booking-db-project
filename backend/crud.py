@@ -64,7 +64,16 @@ def get_users(db: Session):
     return db.query(models.User).all()
 
 
+def get_user_by_email(db: Session, email: str):
+    return db.query(models.User).filter(models.User.email == email).first()
+
+
 def create_user(db: Session, user: schemas.UserCreate):
+    existing_user = get_user_by_email(db, user.email)
+
+    if existing_user:
+        return existing_user
+
     db_user = models.User(**user.model_dump())
     db.add(db_user)
     db.commit()
