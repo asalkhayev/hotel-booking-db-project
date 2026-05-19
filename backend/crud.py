@@ -115,3 +115,130 @@ def create_review(db: Session, review: schemas.ReviewCreate):
     db.commit()
     db.refresh(db_review)
     return db_review
+
+from sqlalchemy import func
+
+
+def get_analytics_summary(db: Session):
+    total_hotels = db.query(models.Hotel).count()
+    total_rooms = db.query(models.Room).count()
+    total_users = db.query(models.User).count()
+    total_bookings = db.query(models.Booking).count()
+
+    total_revenue = db.query(func.coalesce(func.sum(models.Booking.total_price), 0)).scalar()
+
+    return {
+        "total_hotels": total_hotels,
+        "total_rooms": total_rooms,
+        "total_users": total_users,
+        "total_bookings": total_bookings,
+        "total_revenue": float(total_revenue),
+    }
+
+
+def get_bookings_per_hotel(db: Session):
+    results = (
+        db.query(
+            models.Hotel.id.label("hotel_id"),
+            models.Hotel.name.label("hotel_name"),
+            func.count(models.Booking.id).label("bookings_count"),
+        )
+        .join(models.Room, models.Room.hotel_id == models.Hotel.id)
+        .outerjoin(models.Booking, models.Booking.room_id == models.Room.id)
+        .group_by(models.Hotel.id, models.Hotel.name)
+        .order_by(func.count(models.Booking.id).desc())
+        .all()
+    )
+
+    return [
+        {
+            "hotel_id": row.hotel_id,
+            "hotel_name": row.hotel_name,
+            "bookings_count": row.bookings_count,
+        }
+        for row in results
+    ]
+
+
+def get_top_cities(db: Session):
+    results = (
+        db.query(
+            models.City.id.label("city_id"),
+            models.City.name.label("city_name"),
+            models.City.country.label("country"),
+            func.count(models.Booking.id).label("total_bookings"),
+        )
+        .join(models.Hotel, models.Hotel.city_id == models.City.id)
+        .join(models.Room, models.Room.hotel_id == models.Hotel.id)
+        .outerjoin(models.Booking, models.Booking.room_id == models.Room.id)
+        .group_by(models.City.id, models.City.name, models.City.country)
+        .order_by(func.count(models.Booking.id).desc())
+        .limit(5)
+        .all()
+    )
+
+    return [
+        {
+            "city_id": row.city_id,
+            "city_name": row.city_name,
+            "country": row.country,
+            "total_bookings": row.total_bookings,
+        }
+        for row in results
+    ]
+
+
+def get_occupancy_rate(db: Session):
+    results = (
+        db.query(
+            models.Hotel.id.label("hotel_id"),
+            models.Hotel.name.label("hotel_name"),
+            func.count(func.distinct(models.Room.id)).label("total_rooms"),
+            func.count(func.distinct(models.Booking.room_id)).label("booked_rooms"),
+        )
+        .join(models.Room, models.Room.hotel_id == models.Hotel.id)
+        .outerjoin(models.Booking, models.Booking.room_id == models.Room.id)
+        .group_by(models.Hotel.id, models.Hotel.name)
+        .all()
+    )
+
+    data = []
+
+    for row in results:
+        occupancy_rate = 0
+
+        if row.total_rooms > 0:
+            occupancy_rate = round((row.booked_rooms / row.total_rooms) * 100, 2)
+
+        data.append(
+            {
+                "hotel_id": row.hotel_id,
+                "hotel_name": row.hotel_name,
+                "total_rooms": row.total_rooms,
+                "booked_rooms": row.booked_rooms,
+                "occupancy_rate": occupancy_rate,
+            }
+        )
+
+    return data
+
+def get_reviews_by_hotel(db: Session, hotel_id: int):
+    return db.query(models.Review).filter(models.Review.hotel_id == hotel_id).all()
+
+def search_hotels(db: Session, destination: str = ""):
+    query = db.query(models.Hotel)
+
+    if destination:
+        search = f"%{destination}%"
+        query = (
+            query
+            .join(models.City, models.Hotel.city_id == models.City.id)
+            .filter(
+                (models.Hotel.name.ilike(search)) |
+                (models.Hotel.address.ilike(search)) |
+                (models.City.name.ilike(search)) |
+                (models.City.country.ilike(search))
+            )
+        )
+
+    return query.all()

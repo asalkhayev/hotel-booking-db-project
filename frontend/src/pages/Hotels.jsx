@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { getHotels } from "../api";
+import { getHotels, searchHotels } from "../api";
 import HotelCard from "../components/HotelCard";
 import SearchBar from "../components/SearchBar";
 
@@ -20,14 +20,10 @@ function Hotels() {
     loadHotels();
   }, []);
 
-  const filteredHotels = useMemo(() => {
-    if (!destination.trim()) return hotels;
-
-    return hotels.filter((hotel) => {
-      const text = `${hotel.name} ${hotel.address} ${hotel.description}`.toLowerCase();
-      return text.includes(destination.toLowerCase());
-    });
-  }, [hotels, destination]);
+  async function handleSearch() {
+    const data = await searchHotels(destination);
+    setHotels(data);
+  }
 
   return (
     <>
@@ -53,15 +49,16 @@ function Hotels() {
             setCheckOut={setCheckOut}
             guests={guests}
             setGuests={setGuests}
+            onSearch={handleSearch}
           />
 
           <div className="section-title hotels-title">
             <p>Search results</p>
-            <h2>{filteredHotels.length} properties found</h2>
+            <h2>{hotels.length} properties found</h2>
           </div>
 
           <div className="stays-grid">
-            {filteredHotels.map((hotel, index) => (
+          {hotels.map((hotel, index) => (
               <HotelCard key={hotel.id} hotel={hotel} index={index} />
             ))}
           </div>

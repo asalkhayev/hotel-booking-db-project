@@ -65,6 +65,11 @@ def create_hotel(hotel: schemas.HotelCreate, db: Session = Depends(get_db)):
     return crud.create_hotel(db, hotel)
 
 
+@app.get("/hotels/search/", response_model=List[schemas.Hotel])
+def search_hotels(destination: str = "", db: Session = Depends(get_db)):
+    return crud.search_hotels(db, destination)
+
+
 @app.get("/hotels/{hotel_id}", response_model=schemas.Hotel)
 def read_hotel(hotel_id: int, db: Session = Depends(get_db)):
     return crud.get_hotel(db, hotel_id)
@@ -123,3 +128,26 @@ def read_reviews(db: Session = Depends(get_db)):
 @app.post("/reviews", response_model=schemas.Review)
 def create_review(review: schemas.ReviewCreate, db: Session = Depends(get_db)):
     return crud.create_review(db, review)
+
+@app.get("/analytics/summary")
+def analytics_summary(db: Session = Depends(get_db)):
+    return crud.get_analytics_summary(db)
+
+
+@app.get("/analytics/bookings-per-hotel")
+def analytics_bookings_per_hotel(db: Session = Depends(get_db)):
+    return crud.get_bookings_per_hotel(db)
+
+
+@app.get("/analytics/top-cities")
+def analytics_top_cities(db: Session = Depends(get_db)):
+    return crud.get_top_cities(db)
+
+
+@app.get("/analytics/occupancy-rate")
+def analytics_occupancy_rate(db: Session = Depends(get_db)):
+    return crud.get_occupancy_rate(db)
+
+@app.get("/hotels/{hotel_id}/reviews", response_model=List[schemas.Review])
+def read_reviews_by_hotel(hotel_id: int, db: Session = Depends(get_db)):
+    return crud.get_reviews_by_hotel(db, hotel_id)

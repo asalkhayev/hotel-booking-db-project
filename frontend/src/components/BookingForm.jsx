@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createBooking } from "../api";
+import { createBooking, createPayment } from "../api";
 
 function BookingForm({
   selectedRoom,
@@ -43,7 +43,7 @@ function BookingForm({
       return;
     }
 
-    await createBooking({
+    const newBooking = await createBooking({
       user_id: Number(loggedInUser.id),
       room_id: Number(selectedRoom.id),
       check_in: checkIn,
@@ -51,9 +51,16 @@ function BookingForm({
       status: "confirmed",
       total_price: Number(total.toFixed(2)),
     });
+    
+    await createPayment({
+      booking_id: Number(newBooking.id),
+      amount: Number(total.toFixed(2)),
+      payment_method: "card",
+      status: "paid",
+    });
 
     setCurrentUser(loggedInUser);
-    setMessage("Booking confirmed and saved in PostgreSQL.");
+    setMessage("Booking and payment confirmed successfully.");
 
     if (onBookingCreated) {
       onBookingCreated();

@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { getBookings, getHotel, getRoomsByHotel, getUsers } from "../api";
+import {
+  getBookings,
+  getHotel,
+  getReviewsByHotel,
+  getRoomsByHotel,
+  getUsers,
+} from "../api";
 import RoomCard from "../components/RoomCard";
 import BookingForm from "../components/BookingForm";
 
@@ -45,6 +51,7 @@ function HotelDetails() {
   const [rooms, setRooms] = useState([]);
   const [users, setUsers] = useState([]);
   const [bookingsCount, setBookingsCount] = useState(0);
+  const [reviews, setReviews] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   const [checkIn, setCheckIn] = useState("2026-05-20");
@@ -54,17 +61,20 @@ function HotelDetails() {
   const nights = calculateNights(checkIn, checkOut);
 
   async function loadDetails() {
-    const [hotelData, roomsData, usersData, bookingsData] = await Promise.all([
-      getHotel(id),
-      getRoomsByHotel(id),
-      getUsers(),
-      getBookings(),
-    ]);
+    const [hotelData, roomsData, usersData, bookingsData, reviewsData] =
+      await Promise.all([
+        getHotel(id),
+        getRoomsByHotel(id),
+        getUsers(),
+        getBookings(),
+        getReviewsByHotel(id),
+      ]);
 
     setHotel(hotelData);
     setRooms(roomsData);
     setUsers(usersData);
     setBookingsCount(bookingsData.length);
+    setReviews(reviewsData);
   }
 
   useEffect(() => {
@@ -154,6 +164,33 @@ function HotelDetails() {
                 ))}
               </div>
             </section>
+
+            <section className="text-block">
+              <h3>Guest reviews</h3>
+
+              {reviews.length === 0 ? (
+                <div className="empty-box">No reviews yet for this hotel.</div>
+              ) : (
+                <div className="reviews-grid">
+                  {reviews.map((review) => (
+                    <article className="review-card" key={review.id}>
+                      <div className="review-top">
+                        <span className="review-avatar">G</span>
+                        <div>
+                          <strong>Guest #{review.user_id}</strong>
+                          <p>{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</p>
+                        </div>
+                      </div>
+
+                      <p className="review-comment">
+                        {review.comment || "No comment provided."}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+
 
             <section className="text-block" id="select-room">
               <h3>Select room</h3>

@@ -48,3 +48,56 @@ export async function createUser(userData) {
 
   return res.json();
 }
+
+export async function getAnalyticsSummary() {
+  const res = await fetch(`${API_URL}/analytics/summary`);
+  return res.json();
+}
+
+export async function getBookingsPerHotel() {
+  const res = await fetch(`${API_URL}/analytics/bookings-per-hotel`);
+  return res.json();
+}
+
+export async function getTopCities() {
+  const res = await fetch(`${API_URL}/analytics/top-cities`);
+  return res.json();
+}
+
+export async function getOccupancyRate() {
+  const res = await fetch(`${API_URL}/analytics/occupancy-rate`);
+  return res.json();
+}
+
+export async function getReviewsByHotel(hotelId) {
+  const res = await fetch(`${API_URL}/hotels/${hotelId}/reviews`);
+  return res.json();
+}
+
+export async function createPayment(paymentData) {
+  const res = await fetch(`${API_URL}/payments`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(paymentData),
+  });
+
+  return res.json();
+}
+
+export async function getPayments() {
+  const res = await fetch(`${API_URL}/payments`);
+  return res.json();
+}
+
+export async function searchHotels(destination) {
+  const params = new URLSearchParams();
+
+  if (destination) {
+    params.append("destination", destination);
+  }
+
+  const res = await fetch(`${API_URL}/hotels/search/?${params.toString()}`);
+  return res.json();
+}

@@ -1,45 +1,54 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { getBookings, getHotels, getUsers } from "../api";
+import {
+  getAnalyticsSummary,
+  getBookingsPerHotel,
+  getOccupancyRate,
+  getTopCities,
+} from "../api";
 
 function AdminDashboard() {
-  const [hotels, setHotels] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [bookings, setBookings] = useState([]);
+  const [summary, setSummary] = useState(null);
+  const [bookingsPerHotel, setBookingsPerHotel] = useState([]);
+  const [topCities, setTopCities] = useState([]);
+  const [occupancyRate, setOccupancyRate] = useState([]);
 
   useEffect(() => {
-    async function loadData() {
-      const [hotelsData, usersData, bookingsData] = await Promise.all([
-        getHotels(),
-        getUsers(),
-        getBookings(),
-      ]);
+    async function loadAnalytics() {
+      const [summaryData, bookingsData, citiesData, occupancyData] =
+        await Promise.all([
+          getAnalyticsSummary(),
+          getBookingsPerHotel(),
+          getTopCities(),
+          getOccupancyRate(),
+        ]);
 
-      setHotels(hotelsData);
-      setUsers(usersData);
-      setBookings(bookingsData);
+      setSummary(summaryData);
+      setBookingsPerHotel(bookingsData);
+      setTopCities(citiesData);
+      setOccupancyRate(occupancyData);
     }
 
-    loadData();
+    loadAnalytics();
   }, []);
 
-  const totalRevenue = useMemo(() => {
-    return bookings.reduce((sum, booking) => sum + Number(booking.total_price), 0);
-  }, [bookings]);
-
-  const averageBookingValue = bookings.length
-    ? totalRevenue / bookings.length
-    : 0;
+  if (!summary) {
+    return (
+      <main>
+        <div className="empty-box page-empty">Loading analytics...</div>
+      </main>
+    );
+  }
 
   return (
     <>
       <section className="page-hero">
         <div>
           <p className="small-kicker">Admin dashboard</p>
-          <h1>Project analytics</h1>
+          <h1>Database analytics</h1>
           <p>
-            A simple dashboard showing database-driven project metrics from the
-            hotel booking system.
+            Real statistics calculated by FastAPI from PostgreSQL tables,
+            bookings, rooms, hotels, users, and cities.
           </p>
         </div>
       </section>
@@ -48,32 +57,121 @@ function AdminDashboard() {
         <section className="admin-grid">
           <div className="admin-card">
             <span>Total hotels</span>
-            <strong>{hotels.length}</strong>
+            <strong>{summary.total_hotels}</strong>
+          </div>
+
+          <div className="admin-card">
+            <span>Total rooms</span>
+            <strong>{summary.total_rooms}</strong>
           </div>
 
           <div className="admin-card">
             <span>Total users</span>
-            <strong>{users.length}</strong>
+            <strong>{summary.total_users}</strong>
           </div>
 
           <div className="admin-card">
             <span>Total bookings</span>
-            <strong>{bookings.length}</strong>
+            <strong>{summary.total_bookings}</strong>
           </div>
 
-          <div className="admin-card">
+          <div className="admin-card wide-admin-card">
             <span>Total revenue</span>
-            <strong>€{totalRevenue.toFixed(2)}</strong>
+            <strong>€{Number(summary.total_revenue).toFixed(2)}</strong>
+          </div>
+        </section>
+
+        <section className="analytics-layout">
+          <div className="analytics-card">
+            <div className="analytics-heading">
+              <p>SQL task</p>
+              <h2>Bookings per hotel</h2>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Hotel</th>
+                  <th>Bookings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookingsPerHotel.map((item) => (
+                  <tr key={item.hotel_id}>
+                    <td>{item.hotel_name}</td>
+                    <td>{item.bookings_count}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="analytics-card">
+            <div className="analytics-heading">
+              <p>SQL task</p>
+              <h2>Top cities</h2>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>City</th>
+                  <th>Country</th>
+                  <th>Bookings</th>
+                </tr>
+              </thead>
+              <tbody>
+                {topCities.map((item) => (
+                  <tr key={item.city_id}>
+                    <td>{item.city_name}</td>
+                    <td>{item.country}</td>
+                    <td>{item.total_bookings}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="analytics-card full-width-card">
+            <div className="analytics-heading">
+              <p>SQL task</p>
+              <h2>Occupancy rate by hotel</h2>
+            </div>
+
+            <table>
+              <thead>
+                <tr>
+                  <th>Hotel</th>
+                  <th>Total rooms</th>
+                  <th>Booked rooms</th>
+                  <th>Occupancy</th>
+                </tr>
+              </thead>
+              <tbody>
+                {occupancyRate.map((item) => (
+                  <tr key={item.hotel_id}>
+                    <td>{item.hotel_name}</td>
+                    <td>{item.total_rooms}</td>
+                    <td>{item.booked_rooms}</td>
+                    <td>
+                      <span className="status">
+                        {item.occupancy_rate}%
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 
         <section className="rules-section admin-notes">
-          <h3>What this dashboard proves</h3>
+          <h3>Why this dashboard matters</h3>
           <ul>
-            <li>The frontend reads data from backend API endpoints.</li>
-            <li>The backend retrieves real rows from PostgreSQL.</li>
-            <li>New bookings created in the hotel page update these numbers.</li>
-            <li>Average booking value is currently €{averageBookingValue.toFixed(2)}.</li>
+            <li>Statistics are calculated in the backend from real database tables.</li>
+            <li>The dashboard demonstrates joins between hotels, rooms, bookings, and cities.</li>
+            <li>Revenue is calculated from booking prices stored in PostgreSQL.</li>
+            <li>These analytics match the required SQL tasks from the project description.</li>
           </ul>
         </section>
       </main>
