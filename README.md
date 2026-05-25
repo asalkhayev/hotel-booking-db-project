@@ -117,6 +117,23 @@ hotel-booking-db-project/
 
 ---
 
+## Screenshots
+
+Project screenshots are stored in the `docs/` folder:
+
+- `docs/homepage.png`
+- `docs/hotels_page.png`
+- `docs/hotel_details.png`
+- `docs/hotel_reviews.png`
+- `docs/booking_form.png`
+- `docs/bookings_page.png`
+- `docs/admin_dashboard.png`
+- `docs/admin_analytics.png`
+- `docs/fastapi_docs.png`
+- `docs/schema_image.png`
+
+---
+
 ## Domain Description
 
 The chosen domain is a hotel booking platform. Users can browse hotels in different cities, view hotel details, select rooms, create bookings, make payments, and read or leave reviews.
