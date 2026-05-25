@@ -1311,3 +1311,395 @@ td {
   background: #fff3df;
   color: #8a4b00;
 }
+
+/* Final page hero readability fixes */
+
+.page-hero {
+  background: #f7f4ee;
+  color: #171717;
+  padding: 72px 26px 52px;
+  text-align: center;
+}
+
+.page-hero h1 {
+  color: #171717;
+  opacity: 1;
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+
+.page-hero p {
+  color: #3d3932;
+  max-width: 720px;
+  margin: 22px auto 0;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.page-hero .small-kicker {
+  color: #b77f37 !important;
+  margin-bottom: 18px;
+}
+
+.compact-section {
+  padding-top: 28px;
+}
+
+.hotels-title {
+  margin-top: 42px;
+}
+
+.hotels-title h2 {
+  color: #171717;
+  opacity: 1;
+  font-size: clamp(34px, 4vw, 54px);
+}
+
+.content-section .search-panel {
+  margin-top: 0;
+}
+
+/* Full-width layout polish */
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.app {
+  width: 100%;
+  max-width: none;
+}
+
+.site-header {
+  width: 100%;
+}
+
+.header-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.hero-section {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  min-height: 760px;
+}
+
+.hero-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+main {
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+/* make homepage hero text more readable */
+.hero-inner h1 {
+  max-width: 850px;
+  color: #fffaf2;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.hero-copy {
+  color: #fffaf2;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+/* make the search bar less squeezed */
+.hero-section .search-panel {
+  width: min(1060px, calc(100vw - 52px));
+}
+
+/* Remove boxed layout completely */
+
+#root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+.site-header {
+  width: 100%;
+}
+
+.hero-section {
+  width: 100%;
+  margin-left: 0;
+}
+
+.page-hero {
+  width: 100%;
+}
+
+/* Fixed login modal overlay */
+
+.modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  background: rgba(0, 0, 0, 0.58) !important;
+  backdrop-filter: blur(8px);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+}
+
+.login-modal {
+  width: min(460px, 92vw) !important;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative !important;
+  background: #fffdf8 !important;
+  border-radius: 28px !important;
+  padding: 34px !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.35) !important;
+}
+
+.modal-close {
+  position: absolute !important;
+  top: 18px !important;
+  right: 18px !important;
+  width: 34px !important;
+  height: 34px !important;
+  border: none !important;
+  border-radius: 999px !important;
+  background: #f1eadf !important;
+  color: #171717 !important;
+  font-size: 24px !important;
+  line-height: 1 !important;
+}
+
+.login-modal h2 {
+  margin: 0 !important;
+  font-family: Georgia, "Times New Roman", serif !important;
+  font-size: 34px !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.login-modal p {
+  margin: 12px 0 24px !important;
+  color: #736f66 !important;
+  line-height: 1.6 !important;
+}
+
+.login-modal form {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+.login-modal label {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 7px !important;
+  color: #3c3934 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+}
+
+.login-modal input {
+  width: 100% !important;
+  border: 1px solid #d9d0c1 !important;
+  border-radius: 14px !important;
+  background: #fffaf2 !important;
+  padding: 13px 14px !important;
+  outline: none !important;
+}
+
+.login-modal input:focus {
+  border-color: #0e4b4f !important;
+  box-shadow: 0 0 0 4px rgba(14, 75, 79, 0.11) !important;
+}
+
+.modal-kicker {
+  color: #b77f37 !important;
+  margin-bottom: 12px !important;
+}
+
+body.modal-open {
+  overflow: hidden;
+}
+
+/* Fix admin dashboard summary cards */
+
+.admin-grid {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 26px 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 18px;
+}
+
+.admin-card {
+  background: #fffdf8;
+  border: 1px solid rgba(23, 23, 23, 0.08);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 16px 45px rgba(39, 32, 21, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-card span {
+  color: #736f66;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.admin-card strong {
+  color: #0e4b4f;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.wide-admin-card {
+  grid-column: auto;
+}
+
+@media (max-width: 1050px) {
+  .admin-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Compact admin analytics tables */
+
+.analytics-card table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.analytics-card th,
+.analytics-card td {
+  padding: 13px 16px;
+  font-size: 14px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.analytics-card th {
+  font-size: 11px;
+}
+
+.analytics-card td:first-child,
+.analytics-card th:first-child {
+  width: 62%;
+}
+
+.analytics-card td:last-child,
+.analytics-card th:last-child {
+  width: 38%;
+  text-align: right;
+}
+
+/* Top cities table has 3 columns */
+.analytics-card:nth-child(2) td:first-child,
+.analytics-card:nth-child(2) th:first-child {
+  width: 38%;
+}
+
+.analytics-card:nth-child(2) td:nth-child(2),
+.analytics-card:nth-child(2) th:nth-child(2) {
+  width: 34%;
+}
+
+.analytics-card:nth-child(2) td:nth-child(3),
+.analytics-card:nth-child(2) th:nth-child(3) {
+  width: 28%;
+  text-align: right;
+}
+
+/* Occupancy table */
+.full-width-card table {
+  table-layout: auto;
+}
+
+.full-width-card th,
+.full-width-card td {
+  white-space: normal;
+}
+
+@media (max-width: 900px) {
+  .analytics-card table {
+    table-layout: auto;
+  }
+
+  .analytics-card th,
+  .analytics-card td {
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+}
+
+/* Fix occupancy analytics table readability */
+
+.full-width-card table {
+  width: 100%;
+  min-width: 0 !important;
+  table-layout: fixed !important;
+}
+
+.full-width-card th,
+.full-width-card td {
+  white-space: nowrap !important;
+  word-break: normal !important;
+  overflow-wrap: normal !important;
+  padding: 14px 16px !important;
+  font-size: 14px !important;
+}
+
+.full-width-card th:nth-child(1),
+.full-width-card td:nth-child(1) {
+  width: 55%;
+}
+
+.full-width-card th:nth-child(2),
+.full-width-card td:nth-child(2) {
+  width: 15%;
+  text-align: center;
+}
+
+.full-width-card th:nth-child(3),
+.full-width-card td:nth-child(3) {
+  width: 15%;
+  text-align: center;
+}
+
+.full-width-card th:nth-child(4),
+.full-width-card td:nth-child(4) {
+  width: 15%;
+  text-align: right;
+}
+
+.full-width-card th {
+  font-size: 11px !important;
+  letter-spacing: 0.08em;
+}

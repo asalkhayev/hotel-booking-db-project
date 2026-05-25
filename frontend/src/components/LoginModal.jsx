@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createUser } from "../api";
 
 function LoginModal({ isOpen, onClose, onLogin }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("modal-open");
+    } else {
+      document.body.classList.remove("modal-open");
+    }
+
+    return () => document.body.classList.remove("modal-open");
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -26,15 +36,13 @@ function LoginModal({ isOpen, onClose, onLogin }) {
   return (
     <div className="modal-backdrop">
       <div className="login-modal">
-        <button className="modal-close" onClick={onClose}>
+        <button className="modal-close" onClick={onClose} type="button">
           ×
         </button>
 
         <p className="small-kicker modal-kicker">Welcome to ArangaTrip</p>
         <h2>Create your guest profile</h2>
-        <p>
-          Enter your details once, then use this profile for room bookings.
-        </p>
+        <p>Enter your details once, then use this profile for room bookings.</p>
 
         <form onSubmit={handleSubmit}>
           <label>
